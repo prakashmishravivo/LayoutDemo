@@ -2,8 +2,8 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Header from "./Header";
 import Sidebar from "./Sidebar";
+import Header from "./Header";
 
 const drawerWidth = 240;
 
