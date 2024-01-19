@@ -13,6 +13,9 @@ const Header = ({ open, handleDrawerClose, handleDrawerOpen }) => {
       position="fixed"
       elevation={0}
       sx={{
+        bgcolor: theme.palette.background.default,
+        boxShadow:
+          "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px",
         [theme.breakpoints.up("sm")]: {
           zIndex: (theme) => theme.zIndex.drawer + 1,
         },
@@ -20,7 +23,6 @@ const Header = ({ open, handleDrawerClose, handleDrawerOpen }) => {
     >
       <Toolbar>
         <IconButton
-          color="inherit"
           aria-label="open drawer"
           onClick={drawerHandler}
           edge="start"
@@ -30,7 +32,7 @@ const Header = ({ open, handleDrawerClose, handleDrawerOpen }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div">
+        <Typography color={"#1e88ff"} variant="h6" noWrap component="div">
           Persistent drawer
         </Typography>
       </Toolbar>

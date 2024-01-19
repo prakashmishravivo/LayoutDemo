@@ -1,17 +1,13 @@
 import React from "react";
 import { useTheme } from "@mui/material/styles";
 import {
-  Collapse,
   Divider,
   Drawer,
+  Grid,
   IconButton,
-  InputAdornment,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  listItemButtonClasses,
-  listItemIconClasses,
+  Paper,
+  Typography,
+  keyframes,
   styled,
   useMediaQuery,
 } from "@mui/material";
@@ -65,6 +61,11 @@ const sideBarData = [
     ],
   },
 ];
+
+const blink = keyframes`
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+`;
 
 const Sidebar = ({ open, handleDrawerClose }) => {
   const theme = useTheme();
@@ -124,107 +125,120 @@ const Sidebar = ({ open, handleDrawerClose }) => {
         </IconButton>
       </DrawerHeader>
       <Divider />
-      <List sx={{ py: "0" }}>
-        {sideBarData.map((item, index) => (
-          <React.Fragment key={index}>
-            {item.subHeader.length > 0 && (
-              <React.Fragment>
-                <ListItem
-                  disablePadding
+
+      <Grid container>
+        {sideBarData.map((item, index) => {
+          return (
+            <React.Fragment>
+              {item.subHeader.length === 0 && (
+                <Grid
+                  item
+                  xs={12}
+                  sx={{ cursor: "pointer" }}
                   onClick={() => {
-                    handleGroupMenu(item.title, !groupMenuOpenFlag[item.title]);
-                  }}
-                  sx={{
-                    borderRadius: "5rem",
-                    my: "1rem",
-                    border: !groupMenuOpenFlag[item.title] && "1px solid gray",
-                    [`& .${listItemButtonClasses.root}:hover`]: {
-                      background: "#cbe0f7",
-                    },
+                    setActivePage(item.title);
                   }}
                 >
-                  <ListItemButton>
-                    <ListItemText primary={item.title} />
-                    {item.subHeader.length > 0 && (
-                      <React.Fragment>
-                        {groupMenuOpenFlag[item.title] ? (
-                          <ExpandMore
-                            onClick={() => {
-                              handleGroupMenu(item.title, false);
-                            }}
-                          />
-                        ) : (
-                          <ExpandLess
-                            onClick={() => {
-                              handleGroupMenu(item.title, true);
-                            }}
-                          />
-                        )}
-                      </React.Fragment>
+                  <Paper
+                    sx={{
+                      mx: 1,
+                      my: 0.5,
+                      px: 3,
+                      py: 1,
+                      borderRadius: "2rem",
+                      background: item.title === activePage && "#1e88ff",
+                      color: item.title === activePage && "#fff",
+                    }}
+                    elevation={activePage === item.title ? 3 : 0}
+                  >
+                    <Typography
+                      sx={{
+                        animation:
+                          item.title === activePage &&
+                          `${blink} 1s linear infinite`,
+                      }}
+                    >
+                      {item.title}
+                    </Typography>
+                  </Paper>
+                </Grid>
+              )}
+
+              {item.subHeader.length > 0 && (
+                <React.Fragment>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      cursor: "pointer",
+                      mx: 1,
+                      my: 0.5,
+                      px: 3,
+                      py: 1,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      borderRadius: "2rem",
+                    }}
+                    onClick={() =>
+                      handleGroupMenu(
+                        item.title,
+                        !groupMenuOpenFlag[item.title]
+                      )
+                    }
+                  >
+                    <Typography> {item.title}</Typography>
+                    {groupMenuOpenFlag[item.title] ? (
+                      <ExpandMore
+                        onClick={() => handleGroupMenu(item.title, true)}
+                      />
+                    ) : (
+                      <ExpandLess
+                        onClick={() => handleGroupMenu(item.title, false)}
+                      />
                     )}
-                  </ListItemButton>
-                </ListItem>
-                <Collapse
-                  in={groupMenuOpenFlag[item.title]}
-                  timeout="auto"
-                  unmountOnExit
-                >
-                  {item.subHeader.map((i, ind) => {
-                    return (
-                      <ListItem
-                        disablePadding
-                        sx={{
-                          borderRadius: "5rem",
-                          my: "1rem",
-                          border:
-                            item.subHeader.length - 1 === ind &&
-                            "1px solid gray",
-                          color: activePage === i.title && "#fff",
-                          background: activePage === i.title && "#1e88ff",
-                          [`& .${listItemButtonClasses.root}:hover`]: {
-                            background: activePage !== i.title && "#cbe0f7",
-                          },
-                        }}
-                        key={ind}
-                        onClick={() => {
-                          setActivePage(i.title);
-                        }}
-                      >
-                        <ListItemButton>
-                          <ListItemText sx={{ pl: "1rem" }} primary={i.title} />
-                        </ListItemButton>
-                      </ListItem>
-                    );
-                  })}
-                </Collapse>
-              </React.Fragment>
-            )}
-            {item.subHeader.length === 0 && (
-              <ListItem
-                disablePadding
-                key={index}
-                onClick={() => {
-                  setActivePage(item.title);
-                }}
-                sx={{
-                  borderRadius: "5rem",
-                  my: "1rem",
-                  border: "1px solid gray",
-                  color: activePage === item.title && "#fff",
-                  background: activePage === item.title && "#1e88ff",
-                  [`& .${listItemButtonClasses.root}:hover`]: {
-                    background: activePage !== item.title && "#cbe0f7",
-                  },
-                }}
-              >
-                <ListItemButton>
-                  <ListItemText primary={item.title} />
-                </ListItemButton>
-              </ListItem>
-            )}
-          </React.Fragment>
-        ))}
-      </List>
+                  </Grid>
+                  {groupMenuOpenFlag[item.title] &&
+                    item.subHeader.map((i, ind) => {
+                      return (
+                        <Grid
+                          item
+                          xs={12}
+                          sx={{ cursor: "pointer", pl: 2 }}
+                          onClick={() => {
+                            setActivePage(i.title);
+                          }}
+                        >
+                          <Paper
+                            sx={{
+                              mx: 1,
+                              my: 0.5,
+                              px: 3,
+                              py: 1,
+                              borderRadius: "2rem",
+                              background: i.title === activePage && "#1e88ff",
+                              color: i.title === activePage && "#fff",
+                            }}
+                            elevation={activePage === i.title ? 3 : 0}
+                          >
+                            <Typography
+                              sx={{
+                                animation:
+                                  i.title === activePage &&
+                                  `${blink} 1s linear infinite`,
+                              }}
+                            >
+                              {i.title}
+                            </Typography>
+                          </Paper>
+                        </Grid>
+                      );
+                    })}
+                </React.Fragment>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </Grid>
     </Drawer>
   );
 };
