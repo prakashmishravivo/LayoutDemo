@@ -10,6 +10,9 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  listItemButtonClasses,
+  listItemIconClasses,
+  styled,
   useMediaQuery,
 } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -17,6 +20,15 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 let drawerWidth = 240;
+
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+  justifyContent: "flex-end",
+}));
 
 const sideBarData = [
   { title: "User", path: "/", icon: {}, subHeader: [] },
@@ -54,9 +66,10 @@ const sideBarData = [
   },
 ];
 
-const Sidebar = ({ open, handleDrawerClose, DrawerHeader }) => {
+const Sidebar = ({ open, handleDrawerClose }) => {
   const theme = useTheme();
   const mediumAndAboveScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const [activePage, setActivePage] = React.useState("User");
   const [groupMenuOpenFlag, setGroupMenuOpenFlag] = React.useState({
     Appliance: false,
     SystemConfig: false,
@@ -121,6 +134,14 @@ const Sidebar = ({ open, handleDrawerClose, DrawerHeader }) => {
                   onClick={() => {
                     handleGroupMenu(item.title, !groupMenuOpenFlag[item.title]);
                   }}
+                  sx={{
+                    borderRadius: "5rem",
+                    my: "1rem",
+                    border: !groupMenuOpenFlag[item.title] && "1px solid gray",
+                    [`& .${listItemButtonClasses.root}:hover`]: {
+                      background: "#cbe0f7",
+                    },
+                  }}
                 >
                   <ListItemButton>
                     <ListItemText primary={item.title} />
@@ -150,9 +171,27 @@ const Sidebar = ({ open, handleDrawerClose, DrawerHeader }) => {
                 >
                   {item.subHeader.map((i, ind) => {
                     return (
-                      <ListItem disablePadding sx={{ pl: 3 }} key={ind}>
+                      <ListItem
+                        disablePadding
+                        sx={{
+                          borderRadius: "5rem",
+                          my: "1rem",
+                          border:
+                            item.subHeader.length - 1 === ind &&
+                            "1px solid gray",
+                          color: activePage === i.title && "#fff",
+                          background: activePage === i.title && "#1e88ff",
+                          [`& .${listItemButtonClasses.root}:hover`]: {
+                            background: activePage !== i.title && "#cbe0f7",
+                          },
+                        }}
+                        key={ind}
+                        onClick={() => {
+                          setActivePage(i.title);
+                        }}
+                      >
                         <ListItemButton>
-                          <ListItemText primary={i.title} />
+                          <ListItemText sx={{ pl: "1rem" }} primary={i.title} />
                         </ListItemButton>
                       </ListItem>
                     );
@@ -161,7 +200,23 @@ const Sidebar = ({ open, handleDrawerClose, DrawerHeader }) => {
               </React.Fragment>
             )}
             {item.subHeader.length === 0 && (
-              <ListItem disablePadding key={index}>
+              <ListItem
+                disablePadding
+                key={index}
+                onClick={() => {
+                  setActivePage(item.title);
+                }}
+                sx={{
+                  borderRadius: "5rem",
+                  my: "1rem",
+                  border: "1px solid gray",
+                  color: activePage === item.title && "#fff",
+                  background: activePage === item.title && "#1e88ff",
+                  [`& .${listItemButtonClasses.root}:hover`]: {
+                    background: activePage !== item.title && "#cbe0f7",
+                  },
+                }}
+              >
                 <ListItemButton>
                   <ListItemText primary={item.title} />
                 </ListItemButton>
