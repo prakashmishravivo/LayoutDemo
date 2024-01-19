@@ -8,6 +8,7 @@ import {
   Paper,
   Typography,
   keyframes,
+  paperClasses,
   styled,
   useMediaQuery,
 } from "@mui/material";
@@ -63,8 +64,14 @@ const sideBarData = [
 ];
 
 const blink = keyframes`
-  from { opacity: 0.7; }
-  to { opacity: 1; }
+  0%{
+  opacity:0;
+  transform: translateX(150%); 
+ }
+100% {
+  opacity:1;
+  transform: translateX(0%);
+ }
 `;
 
 const Sidebar = ({ open, handleDrawerClose }) => {
@@ -129,7 +136,7 @@ const Sidebar = ({ open, handleDrawerClose }) => {
       <Grid container>
         {sideBarData.map((item, index) => {
           return (
-            <React.Fragment>
+            <React.Fragment key={index}>
               {item.subHeader.length === 0 && (
                 <Grid
                   item
@@ -148,14 +155,17 @@ const Sidebar = ({ open, handleDrawerClose }) => {
                       borderRadius: "2rem",
                       background: item.title === activePage && "#1e88ff",
                       color: item.title === activePage && "#fff",
+                      [`&:hover`]: {
+                        background: item.title !== activePage && "#5c92d1",
+                        color: item.title !== activePage && "#fff",
+                      },
                     }}
-                    elevation={activePage === item.title ? 3 : 0}
+                    elevation={activePage === item.title ? 5 : 1}
                   >
                     <Typography
                       sx={{
                         animation:
-                          item.title === activePage &&
-                          `${blink} 1s linear infinite`,
+                          item.title === activePage && `${blink} 0.5s linear`,
                       }}
                     >
                       {item.title}
@@ -173,11 +183,16 @@ const Sidebar = ({ open, handleDrawerClose }) => {
                       cursor: "pointer",
                       mx: 1,
                       my: 0.5,
+                      boxShadow: 1,
                       px: 3,
                       py: 1,
                       display: "flex",
                       justifyContent: "space-between",
                       borderRadius: "2rem",
+                      [`&:hover`]: {
+                        background: item.title !== activePage && "#5c92d1",
+                        color: item.title !== activePage && "#fff",
+                      },
                     }}
                     onClick={() =>
                       handleGroupMenu(
@@ -201,6 +216,7 @@ const Sidebar = ({ open, handleDrawerClose }) => {
                     item.subHeader.map((i, ind) => {
                       return (
                         <Grid
+                          key={ind}
                           item
                           xs={12}
                           sx={{ cursor: "pointer", pl: 2 }}
@@ -217,14 +233,18 @@ const Sidebar = ({ open, handleDrawerClose }) => {
                               borderRadius: "2rem",
                               background: i.title === activePage && "#1e88ff",
                               color: i.title === activePage && "#fff",
+                              [`&:hover`]: {
+                                background: i.title !== activePage && "#5c92d1",
+                                color: item.t !== activePage && "#fff",
+                              },
                             }}
-                            elevation={activePage === i.title ? 3 : 0}
+                            elevation={activePage === i.title ? 5 : 1}
                           >
                             <Typography
                               sx={{
                                 animation:
                                   i.title === activePage &&
-                                  `${blink} 1s linear infinite`,
+                                  `${blink} 0.5s linear`,
                               }}
                             >
                               {i.title}
